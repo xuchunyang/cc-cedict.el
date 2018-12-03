@@ -58,11 +58,10 @@
                             " "
                             "/" (group (+ nonl)) "/"
                             eol))
-            (setf (elt vec idx)
-                  (list :Traditional (match-string 1)
-                        :Simplified (match-string 2)
-                        :Pinyin (match-string 3)
-                        :English (split-string (match-string 4) "/")))
+            (aset vec idx (list :Traditional (match-string 1)
+                                :Simplified (match-string 2)
+                                :Pinyin (match-string 3)
+                                :English (split-string (match-string 4) "/")))
           (error "Cannot parse '%s'"
                  (buffer-substring
                   (line-beginning-position) (line-end-position))))
@@ -89,12 +88,15 @@
   (interactive (list (cc-cedict-completing-read)))
   (unless cc-cedict-cache
     (setq cc-cedict-cache (cc-cedict-parse)))
-  (let ((plist (cl-find-if (lambda (plist)
-                             (or (string= (plist-get plist :Traditional)
-                                          chinese)
-                                 (string= (plist-get plist :Simplified)
-                                          chinese)))
-                           cc-cedict-cache)))
+  (let ((idx 0)
+        (len (length cc-cedict-cache))
+        (plist nil))
+    (while (and (< idx len) (not plist))
+      (let ((pl (aref cc-cedict-cache idx)))
+        (when (or (string= (plist-get pl :Traditional) chinese)
+                  (string= (plist-get pl :Simplified) chinese))
+          (setq plist pl)))
+      (setq idx (1+ idx)))
     (when (called-interactively-p 'interactive)
       ;; TODO Prettify the display, here is the official look
       ;; https://cc-cedict.org/editor/editor.php?handler=QueryDictionary&querydictionary_search=%E5%A7%8A%E5%A6%B9
