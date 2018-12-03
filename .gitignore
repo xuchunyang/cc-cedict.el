@@ -1,0 +1,6 @@
+# The directory file
+*.txt
+*.gz
+
+# Compiled
+*.elc
