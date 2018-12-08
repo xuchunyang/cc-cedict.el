@@ -1,5 +1,4 @@
 env:
-  - EMACS_VERSION=24.1-travis
   - EMACS_VERSION=25.1-travis
   - EMACS_VERSION=26.1-travis
 
