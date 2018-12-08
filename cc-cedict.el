@@ -28,6 +28,8 @@
 
 ;;; Code:
 
+(require 'cl-lib)
+
 ;; Download it from https://cc-cedict.org/wiki/
 ;;
 ;; $ wget https://www.mdbg.net/chinese/export/cedict/cedict_1_0_ts_utf-8_mdbg.txt.gz
@@ -39,6 +41,10 @@
                                 (or load-file-name buffer-file-name)))))
                          (and (file-exists-p file) file))
   "Path to the dictionary file.")
+
+(cl-defstruct (cc-cedict-entry (:constructor cc-cedict-entry-create)
+                               (:copier nil))
+  traditional simplified pinyin english)
 
 (defun cc-cedict-parse ()
   (let (vec (idx 0))
@@ -58,50 +64,46 @@
                             " "
                             "/" (group (+ nonl)) "/"
                             eol))
-            (aset vec idx (list :Traditional (match-string 1)
-                                :Simplified (match-string 2)
-                                :Pinyin (match-string 3)
-                                :English (split-string (match-string 4) "/")))
-          (error "Cannot parse '%s'"
+            (aset vec idx
+                  (cc-cedict-entry-create :traditional (match-string 1)
+                                          :simplified (match-string 2)
+                                          :pinyin (match-string 3)
+                                          :english (split-string (match-string 4) "/")))
+          (error "Failed to parse '%s'"
                  (buffer-substring
                   (line-beginning-position) (line-end-position))))
         (setq idx (1+ idx))
         (forward-line 1))
       vec)))
 
-(defvar cc-cedict-cache
-  (and nil
-       ;; I believe the vector is sorted alphabetically by `:Traditional'
-       [(:Traditional "%" :Simplified "%" :Pinyin "pa1" :English ("percent (Tw)"))
-        (:Traditional "21三體綜合症" :Simplified "21三体综合症" :Pinyin "er4 shi2 yi1 san1 ti3 zong1 he2 zheng4" :English ("trisomy" "Down's syndrome"))]))
+(defvar cc-cedict-cache nil
+  "Vector of `cc-cedict-entry' objects or nil.")
 
 (defun cc-cedict-completing-read ()
   (unless cc-cedict-cache
     (setq cc-cedict-cache (cc-cedict-parse)))
   (completing-read "Chinese: "
-                   (mapcar (lambda (plist)
-                             (plist-get plist :Simplified))
-                           cc-cedict-cache)))
+                   (mapcar #'cc-cedict-entry-simplified cc-cedict-cache)))
 
 ;;;###autoload
 (defun cc-cedict (chinese)
   (interactive (list (cc-cedict-completing-read)))
   (unless cc-cedict-cache
     (setq cc-cedict-cache (cc-cedict-parse)))
-  (let ((idx 0)
-        (len (length cc-cedict-cache))
-        (plist nil))
-    (while (and (< idx len) (not plist))
-      (let ((pl (aref cc-cedict-cache idx)))
-        (when (or (string= (plist-get pl :Traditional) chinese)
-                  (string= (plist-get pl :Simplified) chinese))
-          (setq plist pl)))
-      (setq idx (1+ idx)))
+  (let ((found
+         (cl-loop for entry across cc-cedict-cache
+                  when (or (string= chinese (cc-cedict-entry-traditional entry))
+                           (string= chinese (cc-cedict-entry-simplified entry)))
+                  return entry)))
     (when (called-interactively-p 'interactive)
-      ;; TODO Prettify the display, here is the official look
-      ;; https://cc-cedict.org/editor/editor.php?handler=QueryDictionary&querydictionary_search=%E5%A7%8A%E5%A6%B9
-      (message "%S" plist))
-    plist))
+      (if found
+          (message "%s %s [%s] /%s/"
+                   (cc-cedict-entry-traditional found)
+                   (cc-cedict-entry-simplified found)
+                   (cc-cedict-entry-pinyin found)
+                   (mapconcat #'identity (cc-cedict-entry-english found) "/"))
+        (message "No result found for %s" chinese)))
+    found))
 
 (provide 'cc-cedict)
 ;;; cc-cedict.el ends here
