@@ -21,8 +21,5 @@ $ gunzip cedict_1_0_ts_utf-8_mdbg.txt.gz
 ``` emacs-lisp
 (cc-cedict "姊妹")
 ;; =>
-(:Traditional "姊妹"
- :Simplified "姊妹"
- :Pinyin "zi3 mei4"
- :English ("(older and younger) sisters" "sister (school, city etc)"))
+#s(cc-cedict-entry "姊妹" "姊妹" "zi3 mei4" ("(older and younger) sisters" "sister (school, city etc)"))
 ```
