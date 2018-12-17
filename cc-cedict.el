@@ -87,6 +87,9 @@
 
 ;;;###autoload
 (defun cc-cedict (chinese)
+  "Search CC-CEDICT by traditional or simplified CHINESE.
+Return the result, a `cc-cedict-entry' object or nil.
+Interactively, display the result in echo area."
   (interactive (list (cc-cedict-completing-read)))
   (unless cc-cedict-cache
     (setq cc-cedict-cache (cc-cedict-parse)))
