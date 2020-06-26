@@ -46,6 +46,15 @@
                                (:copier nil))
   traditional simplified pinyin english)
 
+(cl-defmethod cl-print-object ((object cc-cedict-entry) stream)
+  (unless stream (setq stream standard-output))
+  (princ (format "%s %s [%s] /%s/"
+		(cc-cedict-entry-traditional object)
+		(cc-cedict-entry-simplified object)
+		(cc-cedict-entry-pinyin object)
+		(mapconcat #'identity (cc-cedict-entry-english object) "/"))
+	stream))
+
 (defun cc-cedict-parse ()
   (let (vec (idx 0))
     (with-temp-buffer
@@ -100,11 +109,7 @@ Interactively, display the result in echo area."
                   return entry)))
     (when (called-interactively-p 'interactive)
       (if found
-          (message "%s %s [%s] /%s/"
-                   (cc-cedict-entry-traditional found)
-                   (cc-cedict-entry-simplified found)
-                   (cc-cedict-entry-pinyin found)
-                   (mapconcat #'identity (cc-cedict-entry-english found) "/"))
+          (cl-princ found)
         (message "No result found for %s" chinese)))
     found))
 
