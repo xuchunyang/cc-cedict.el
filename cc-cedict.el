@@ -109,7 +109,7 @@ Interactively, display the result in echo area."
                   return entry)))
     (when (called-interactively-p 'interactive)
       (if found
-          (cl-princ found)
+          (cl-prin1 found)
         (message "No result found for %s" chinese)))
     found))
 
