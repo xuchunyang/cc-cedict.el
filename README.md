@@ -1,4 +1,5 @@
-# An Emacs interface for [CC-CEDICT](https://cc-cedict.org/wiki/) [![Build Status](https://travis-ci.org/xuchunyang/cc-cedict.el.svg?branch=master)](https://travis-ci.org/xuchunyang/cc-cedict.el) [![MELPA](https://melpa.org/packages/cc-cedict-badge.svg)](https://melpa.org/#/cc-cedict) 
+# An Emacs interface for [CC-CEDICT](https://cc-cedict.org/wiki/) 
+[![MELPA](https://melpa.org/packages/cc-cedict-badge.svg)](https://melpa.org/#/cc-cedict)
 
 CC-CEDICT is a public-domain Chinese-English dictionary. `cc-cedict.el` is an Emacs interface for it.
 
