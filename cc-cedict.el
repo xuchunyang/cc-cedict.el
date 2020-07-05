@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2018  Xu Chunyang
 
-;; Author: Xu Chunyang <mail@xuchunyang.me>
+;; Author: Xu Chunyang
 ;; Homepage: https://github.com/xuchunyang/cc-cedict.el
 ;; Created: 2018-12-03
 ;; Version: 0.1
