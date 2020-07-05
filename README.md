@@ -23,3 +23,7 @@ $ gunzip cedict_1_0_ts_utf-8_mdbg.txt.gz
 ;; =>
 #s(cc-cedict-entry "姊妹" "姊妹" "zi3 mei4" ("(older and younger) sisters" "sister (school, city etc)"))
 ```
+
+## Dependencies
+
+- Emacs 26.1 or higher
