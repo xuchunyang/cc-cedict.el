@@ -6,7 +6,7 @@
 ;; Homepage: https://github.com/xuchunyang/cc-cedict.el
 ;; Created: 2018-12-03
 ;; Version: 0.1
-;; Package-Requires: ((emacs "25"))
+;; Package-Requires: ((emacs "26.1"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
