@@ -34,13 +34,18 @@
 ;;
 ;; $ wget https://www.mdbg.net/chinese/export/cedict/cedict_1_0_ts_utf-8_mdbg.txt.gz
 ;; $ gunzip cedict_1_0_ts_utf-8_mdbg.txt.gz
-(defvar cc-cedict-file (let ((file
-                              (expand-file-name
-                               "cedict_1_0_ts_utf-8_mdbg.txt"
-                               (file-name-directory
-                                (or load-file-name buffer-file-name)))))
-                         (and (file-exists-p file) file))
-  "Path to the dictionary file.")
+
+(defgroup cc-cedict nil
+  "Options for the cc-cedict library.")
+
+(defcustom cc-cedict-file (let ((file
+				 (expand-file-name
+				  "cedict_1_0_ts_utf-8_mdbg.txt"
+				  (file-name-directory
+                                   (or load-file-name buffer-file-name)))))
+                            (and (file-exists-p file) file))
+  "Path to the dictionary file."
+  :type 'file)
 
 (cl-defstruct (cc-cedict-entry (:constructor cc-cedict-entry-create)
                                (:copier nil))
