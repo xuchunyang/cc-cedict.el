@@ -36,7 +36,8 @@
 ;; $ gunzip cedict_1_0_ts_utf-8_mdbg.txt.gz
 
 (defgroup cc-cedict nil
-  "Options for the cc-cedict library.")
+  "Options for the cc-cedict library."
+  :group 'tools)
 
 (defcustom cc-cedict-file (let ((file
 				 (expand-file-name
