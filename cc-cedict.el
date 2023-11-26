@@ -112,12 +112,17 @@ Interactively, display the result in echo area."
          (cl-loop for entry across cc-cedict-cache
                   when (or (string= chinese (cc-cedict-entry-traditional entry))
                            (string= chinese (cc-cedict-entry-simplified entry)))
-                  return entry)))
+                  collect entry)))
     (when (called-interactively-p 'interactive)
-      (if found
-          (cl-prin1 found)
-        (message "No result found for %s" chinese)))
-    found))
+      (cond ((null found)
+             (message "No result found for %s" chinese))
+            ((cadr found)
+             (let ((candidates (mapcar (lambda (entry)
+                                         (cl-prin1-to-string entry))
+                                       found)))
+               (cl-prin1 (completing-read "Definition: " candidates nil t))))
+            (t (cl-prin1 (car found)))))
+    (car found)))
 
 (provide 'cc-cedict)
 ;;; cc-cedict.el ends here
