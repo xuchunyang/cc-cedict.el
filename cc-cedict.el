@@ -97,8 +97,10 @@
 (defun cc-cedict-completing-read ()
   (unless cc-cedict-cache
     (setq cc-cedict-cache (cc-cedict-parse)))
-  (completing-read "Chinese: "
-                   (mapcar #'cc-cedict-entry-simplified cc-cedict-cache)))
+  (let ((def (when (region-active-p)
+               (buffer-substring (region-beginning) (region-end)))))
+    (completing-read "Chinese: "
+                     (mapcar #'cc-cedict-entry-simplified cc-cedict-cache) nil t nil nil def)))
 
 ;;;###autoload
 (defun cc-cedict (chinese)
